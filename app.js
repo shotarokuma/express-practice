@@ -20,9 +20,13 @@ app.get(['/contact', '/contact-us'], (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'pages', 'contact.html'));
 });
 
-app.get('/characters/:type',(req, res,next) => {
+app.get('/home.html', (req, res) => {
+  res.redirect(301, '/');
+});
+
+app.get('/characters/:type', (req, res, next) => {
   let characters = {
-    coworkers: ['Retsuko', 'Fenneko', 'Haida', 'Tsunoda', 'Kabae'], 
+    coworkers: ['Retsuko', 'Fenneko', 'Haida', 'Tsunoda', 'Kabae'],
     friends: {
       Kiiroitori: {
         type: 'bird', description: 'hard worker'
@@ -36,15 +40,14 @@ app.get('/characters/:type',(req, res,next) => {
       }
     }
   };
-  res.json(characters[req.params.type]);
-  next();
+  if (characters[req.params.type] === undefined) {
+    next();
+  } else {
+    res.json(characters[req.params.type]);
+  }
 });
 
-app.get('/home.html', (req, res) => {
-  res.redirect(301, '/');
-});
-
-app.use("\*",(req, res) => {
+app.use((req, res) => {
   res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
 });
 
